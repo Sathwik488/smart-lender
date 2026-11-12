@@ -1,9 +1,12 @@
-﻿import os
+import os
 import sqlite3
 from datetime import datetime
 
 DB_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(DB_DIR, 'smart_lender.db')
+if os.environ.get('VERCEL'):
+    DB_PATH = '/tmp/smart_lender.db'
+else:
+    DB_PATH = os.path.join(DB_DIR, 'smart_lender.db')
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
