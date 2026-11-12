@@ -1,4 +1,4 @@
-﻿# Smart Lender – An Intelligent Loan Approval Prediction System
+# Smart Lender – An Intelligent Loan Approval Prediction System
 
 ![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12%20%7C%203.14-blue)
 ![Flask](https://img.shields.io/badge/Flask-3.1.3-teal)
@@ -6,6 +6,13 @@
 ![SMOTE](https://img.shields.io/badge/Imbalanced--Learn-SMOTE-green)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.3-purple)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
+
+![Live Deployment](https://img.shields.io/badge/Live%20Demo-smart--lender--wheat.vercel.app-brightgreen?style=for-the-badge&logo=vercel)
+![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)
+
+> **Live Website:** [https://smart-lender-wheat.vercel.app](https://smart-lender-wheat.vercel.app)  
+> **GitHub Repository:** [https://github.com/Sathwik488/smart-lender](https://github.com/Sathwik488/smart-lender)  
+> **Render 1-Click Deploy:** [Deploy on Render](https://render.com/deploy?repo=https://github.com/Sathwik488/smart-lender)
 
 **Smart Lender** is an end-to-end, full-stack Machine Learning web application developed as a Capstone Academic Final-Year Project. It assists financial institutions, underwriters, and credit applicants by evaluating creditworthiness and predicting loan approval odds in real time using balanced machine learning algorithms.
 
