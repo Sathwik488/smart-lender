@@ -1,0 +1,12 @@
+﻿services:
+  - type: web
+    name: smart-lender
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python machine_learning/train_and_evaluate.py && python database/db.py
+    startCommand: gunicorn app:app --workers 2 --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true

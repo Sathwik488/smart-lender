@@ -1,0 +1,178 @@
+﻿{% extends "base.html" %}
+
+{% block title %}About Smart Lender - Project & Machine Learning Architecture{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-8">
+            <span class="badge bg-teal-subtle text-teal px-3 py-2 fw-semibold rounded-pill mb-2">Academic Project Specification</span>
+            <h1 class="fw-extrabold text-dark mb-4">About Smart Lender</h1>
+            <p class="lead text-secondary mb-4">
+                Smart Lender is an end-to-end intelligent decision-support platform designed to automate and standardize loan approval evaluations using modern Machine Learning pipelines and FinTech engineering principles.
+            </p>
+
+            <div class="card-modern p-4 mb-4">
+                <h4 class="fw-bold text-dark mb-3"><i class="fa-solid fa-bullseye text-teal me-2"></i> Project Objectives</h4>
+                <p class="text-secondary mb-3">
+                    In commercial banking, traditional loan underwriting relies on manual review of applicant credit reports, debt obligations, and financial histories. This process can be slow, resource-intensive, and prone to human inconsistency. Smart Lender resolves these bottlenecks by:
+                </p>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <h6 class="fw-bold text-dark"><i class="fa-solid fa-bolt text-teal me-2"></i> Rapid Underwriting</h6>
+                            <p class="small text-secondary mb-0">Delivering instant predictive decisions within milliseconds using serialized Scikit-learn models.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <h6 class="fw-bold text-dark"><i class="fa-solid fa-scale-balanced text-teal me-2"></i> Bias & Imbalance Mitigation</h6>
+                            <p class="small text-secondary mb-0">Utilizing SMOTE on the training split to synthesize balanced rejected/approved representation without data leakage.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <h6 class="fw-bold text-dark"><i class="fa-solid fa-chart-pie text-teal me-2"></i> Explainable Risk Metrics</h6>
+                            <p class="small text-secondary mb-0">Computing debt-to-income and estimated EMI ratios alongside statistical approval probabilities.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 bg-light rounded-3 h-100">
+                            <h6 class="fw-bold text-dark"><i class="fa-solid fa-database text-teal me-2"></i> Complete Audit Persistence</h6>
+                            <p class="small text-secondary mb-0">Recording all submitted applications and model inference decisions in an audit-ready SQLite database.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-modern p-4 mb-4">
+                <h4 class="fw-bold text-dark mb-3"><i class="fa-solid fa-table-list text-teal me-2"></i> Dataset & Features</h4>
+                <p class="text-secondary mb-3">
+                    The platform is trained on the benchmark <strong>Loan Prediction Dataset</strong> comprising 614 historical loan applications. Key variables analyzed include:
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Feature</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>Gender</code></td>
+                                <td>Categorical</td>
+                                <td>Male or Female</td>
+                            </tr>
+                            <tr>
+                                <td><code>Married</code></td>
+                                <td>Categorical</td>
+                                <td>Marital status (Yes / No)</td>
+                            </tr>
+                            <tr>
+                                <td><code>Dependents</code></td>
+                                <td>Categorical / Discrete</td>
+                                <td>Number of dependents (0, 1, 2, 3+)</td>
+                            </tr>
+                            <tr>
+                                <td><code>Education</code></td>
+                                <td>Categorical</td>
+                                <td>Graduate vs Not Graduate</td>
+                            </tr>
+                            <tr>
+                                <td><code>Self_Employed</code></td>
+                                <td>Categorical</td>
+                                <td>Self-employment declaration (Yes / No)</td>
+                            </tr>
+                            <tr>
+                                <td><code>ApplicantIncome</code></td>
+                                <td>Numerical (Continuous)</td>
+                                <td>Primary monthly/annual gross income</td>
+                            </tr>
+                            <tr>
+                                <td><code>CoapplicantIncome</code></td>
+                                <td>Numerical (Continuous)</td>
+                                <td>Co-borrower secondary income</td>
+                            </tr>
+                            <tr>
+                                <td><code>LoanAmount</code></td>
+                                <td>Numerical (Continuous)</td>
+                                <td>Requested principal in thousands ($000s)</td>
+                            </tr>
+                            <tr>
+                                <td><code>Loan_Amount_Term</code></td>
+                                <td>Numerical (Discrete)</td>
+                                <td>Amortization duration in months (e.g., 360, 180)</td>
+                            </tr>
+                            <tr>
+                                <td><code>Credit_History</code></td>
+                                <td>Binary Flag</td>
+                                <td>1.0 (Meets credit guidelines) or 0.0 (Adverse credit history)</td>
+                            </tr>
+                            <tr>
+                                <td><code>Property_Area</code></td>
+                                <td>Categorical</td>
+                                <td>Urban, Semiurban, or Rural</td>
+                            </tr>
+                            <tr>
+                                <td><code>Loan_Status</code></td>
+                                <td>Binary Target</td>
+                                <td>Y (Approved: 1) or N (Rejected: 0)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card-modern p-4 mb-4">
+                <h4 class="fw-bold text-dark mb-3"><i class="fa-solid fa-code text-teal me-2"></i> Technology Stack</h4>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <h6 class="fw-bold text-dark mb-2">Backend & Machine Learning</h6>
+                        <ul class="text-secondary small ps-3 mb-0">
+                            <li>Python 3 & Flask REST Engine</li>
+                            <li>Scikit-learn (Transformers, Ensembles, Pipelines)</li>
+                            <li>Imbalanced-learn (SMOTE Oversampling)</li>
+                            <li>Pandas & NumPy (Data Wrangling)</li>
+                            <li>Joblib (Artifact Serialization)</li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <h6 class="fw-bold text-dark mb-2">Frontend & User Experience</h6>
+                        <ul class="text-secondary small ps-3 mb-0">
+                            <li>HTML5, CSS3, JavaScript ES6</li>
+                            <li>Bootstrap 5.3 & Responsive Grid</li>
+                            <li>Chart.js (Interactive Analytics)</li>
+                            <li>FontAwesome 6 (FinTech Iconography)</li>
+                            <li>Google Fonts (Inter Typography)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card-modern p-4 mb-4 sticky-top" style="top: 2rem;">
+                <h5 class="fw-bold text-dark mb-3">Model Visualizations</h5>
+                <p class="text-secondary small mb-3">Generated directly during training on the test set:</p>
+                <div class="mb-3">
+                    <div class="text-secondary small fw-semibold mb-1">Model Accuracy & F1 Comparison:</div>
+                    <img src="{{ url_for('static', filename='images/model_comparison.png') }}" class="img-fluid rounded border shadow-sm" alt="Model Comparison">
+                </div>
+                <div class="mb-3">
+                    <div class="text-secondary small fw-semibold mb-1">Confusion Matrix:</div>
+                    <img src="{{ url_for('static', filename='images/confusion_matrix.png') }}" class="img-fluid rounded border shadow-sm" alt="Confusion Matrix">
+                </div>
+                <div class="mb-3">
+                    <div class="text-secondary small fw-semibold mb-1">Feature Importances:</div>
+                    <img src="{{ url_for('static', filename='images/feature_importance.png') }}" class="img-fluid rounded border shadow-sm" alt="Feature Importance">
+                </div>
+                <a href="{{ url_for('predict') }}" class="btn btn-primary-fintech w-100 py-2 mt-2">
+                    <i class="fa-solid fa-calculator me-2"></i> Predict Loan Now
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

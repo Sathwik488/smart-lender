@@ -1,0 +1,188 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Analytics Dashboard - Smart Lender{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Dashboard Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="badge bg-teal-subtle text-teal px-3 py-2 fw-semibold rounded-pill mb-2">Live Underwriting Analytics</span>
+            <h2 class="fw-extrabold text-dark mb-0">Underwriting Intelligence Dashboard</h2>
+            <p class="text-secondary small mb-0">Real-time statistics dynamically aggregated from active database submissions.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('predict') }}" class="btn btn-primary-fintech">
+                <i class="fa-solid fa-calculator me-1"></i> New Evaluation
+            </a>
+            <a href="{{ url_for('history') }}" class="btn btn-outline-secondary">
+                <i class="fa-solid fa-clock-rotate-left me-1"></i> Full History
+            </a>
+        </div>
+    </div>
+
+    <!-- 4 KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="card-modern p-3 p-md-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="metric-title">Total Applications</span>
+                    <div class="rounded-circle p-2 bg-light text-primary">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                </div>
+                <div class="metric-value">{{ stats.total_predictions }}</div>
+                <span class="small text-secondary"><i class="fa-solid fa-database me-1 text-teal"></i> Logged in SQLite</span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card-modern p-3 p-md-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="metric-title">Approved Loans</span>
+                    <div class="rounded-circle p-2 bg-success-subtle text-success">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                </div>
+                <div class="metric-value text-success">{{ stats.approved_count }}</div>
+                <span class="small text-success fw-semibold"><i class="fa-solid fa-thumbs-up me-1"></i> Meets Criteria</span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card-modern p-3 p-md-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="metric-title">Rejected Loans</span>
+                    <div class="rounded-circle p-2 bg-danger-subtle text-danger">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </div>
+                </div>
+                <div class="metric-value text-danger">{{ stats.rejected_count }}</div>
+                <span class="small text-danger fw-semibold"><i class="fa-solid fa-triangle-exclamation me-1"></i> High Default Risk</span>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="card-modern p-3 p-md-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="metric-title">Approval Ratio</span>
+                    <div class="rounded-circle p-2 bg-teal-subtle text-teal">
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+                </div>
+                <div class="metric-value text-teal">{{ stats.approval_rate }}%</div>
+                <span class="small text-secondary">Balanced via SMOTE</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <!-- Chart 1: Donut Distribution -->
+        <div class="col-lg-4">
+            <div class="card-modern p-4 h-100">
+                <h5 class="fw-bold text-dark mb-1">Approval Distribution</h5>
+                <p class="text-secondary small mb-3">Ratio of approved vs rejected decisions</p>
+                <div style="position: relative; height: 260px;">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart 2: ML Model Benchmark Comparison -->
+        <div class="col-lg-8">
+            <div class="card-modern p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <h5 class="fw-bold text-dark mb-0">Machine Learning Model Comparison</h5>
+                    <span class="badge bg-teal text-white">Best: {{ metadata.best_model }}</span>
+                </div>
+                <p class="text-secondary small mb-3">Empirical benchmarks (Accuracy, Precision, Recall, F1-Score) on stratified test data</p>
+                <div style="position: relative; height: 260px;">
+                    <canvas id="modelsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <!-- Chart 3: Property Area Distribution -->
+        <div class="col-lg-4">
+            <div class="card-modern p-4 h-100">
+                <h5 class="fw-bold text-dark mb-1">Property Area Breakdown</h5>
+                <p class="text-secondary small mb-3">Loan application distribution by zone</p>
+                <div style="position: relative; height: 240px;">
+                    <canvas id="areaChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Predictions Table -->
+        <div class="col-lg-8">
+            <div class="card-modern p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="fw-bold text-dark mb-0">Recent Predictions</h5>
+                        <p class="text-secondary small mb-0">Latest applications evaluated by the system</p>
+                    </div>
+                    <a href="{{ url_for('history') }}" class="btn btn-sm btn-outline-fintech">View All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light small">
+                            <tr>
+                                <th>App ID</th>
+                                <th>Income</th>
+                                <th>Loan ($k)</th>
+                                <th>Credit</th>
+                                <th>Status</th>
+                                <th>Confidence</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            {% for r in stats.recent_predictions %}
+                            <tr>
+                                <td class="fw-bold text-dark">{{ r.application_id }}</td>
+                                <td>${{ "{:,.0f}".format(r.applicant_income) }}</td>
+                                <td>${{ "{:,.0f}".format(r.loan_amount) }}k</td>
+                                <td>
+                                    {% if r.credit_history == 1.0 %}
+                                    <span class="badge bg-success-subtle text-success">Good</span>
+                                    {% else %}
+                                    <span class="badge bg-danger-subtle text-danger">Poor</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if r.prediction_status == 'Approved' %}
+                                    <span class="badge-approved"><i class="fa-solid fa-check me-1"></i> Approved</span>
+                                    {% else %}
+                                    <span class="badge-rejected"><i class="fa-solid fa-xmark me-1"></i> Rejected</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ r.confidence_score }}%</td>
+                                <td>
+                                    <a href="{{ url_for('prediction_result', application_id=r.application_id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" title="View Details">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center text-secondary py-3">No predictions recorded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const statsData = {{ stats|tojson }};
+    const modelsData = {{ metadata|tojson }};
+    initDashboardCharts(statsData, modelsData);
+});
+</script>
+{% endblock %}

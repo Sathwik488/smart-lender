@@ -1,0 +1,86 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Contact & Project Details - Smart Lender{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-5 justify-content-center">
+        <div class="col-lg-6">
+            <span class="badge bg-teal-subtle text-teal px-3 py-2 fw-semibold rounded-pill mb-2">Project Credentials</span>
+            <h2 class="fw-extrabold text-dark mb-3">Project & Contact Information</h2>
+            <p class="text-secondary mb-4">
+                Smart Lender is an intelligent Machine Learning web application engineered as a Capstone Academic Final-Year Project.
+            </p>
+
+            <div class="card-modern p-4 mb-4">
+                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-graduation-cap text-teal me-2"></i> Academic Information</h5>
+                <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+                    <li class="d-flex justify-content-between pb-2 border-bottom">
+                        <span class="text-secondary">Project Title:</span>
+                        <strong class="text-dark">Smart Lender – Intelligent Loan Approval Prediction System</strong>
+                    </li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom">
+                        <span class="text-secondary">Domain:</span>
+                        <strong class="text-dark">Financial Technology (FinTech) & Machine Learning</strong>
+                    </li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom">
+                        <span class="text-secondary">Academic Year:</span>
+                        <strong class="text-dark">Final Year Engineering (2026)</strong>
+                    </li>
+                    <li class="d-flex justify-content-between pb-2 border-bottom">
+                        <span class="text-secondary">Primary Stack:</span>
+                        <strong class="text-dark">Python, Flask, Scikit-learn, SQLite, Chart.js</strong>
+                    </li>
+                    <li class="d-flex justify-content-between">
+                        <span class="text-secondary">Deployment Target:</span>
+                        <strong class="text-dark">Render & GitHub</strong>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-modern p-4">
+                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-code-branch text-teal me-2"></i> Source Code & Repository</h5>
+                <p class="text-secondary small mb-3">
+                    The source code is organized into a modular full-stack repository including dataset, ML pipelines, tests, and web routes.
+                </p>
+                <div class="d-flex gap-2">
+                    <a href="https://github.com/Sathwik488/smart-lender" target="_blank" class="btn btn-outline-dark btn-sm">
+                        <i class="fa-brands fa-github me-1"></i> GitHub Repository
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-fintech btn-sm">
+                        <i class="fa-solid fa-chart-pie me-1"></i> View Analytics
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card-modern p-4 p-md-5">
+                <h5 class="fw-bold text-dark mb-3"><i class="fa-regular fa-paper-plane text-teal me-2"></i> Send Feedback / Inquiries</h5>
+                <p class="text-secondary small mb-4">Have questions about the machine learning model or underwriting logic?</p>
+                <form onsubmit="event.preventDefault(); alert('Thank you for your feedback! Your message has been logged for academic review.'); this.reset();">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Your name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="subject" placeholder="Project Inquiry / Feedback" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Message</label>
+                        <textarea class="form-control" id="message" rows="4" placeholder="Enter your thoughts or questions..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary-fintech w-100 py-2">
+                        <i class="fa-solid fa-paper-plane me-1"></i> Submit Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

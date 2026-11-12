@@ -1,0 +1,164 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Loan Evaluation Result - {{ p.application_id }} | Smart Lender{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8">
+            <!-- Result Banner Card -->
+            <div class="card-modern p-4 p-md-5 mb-4 text-center {% if p.prediction_status == 'Approved' %}border-emerald{% else %}border-rose{% endif %}" style="border-width: 2px;">
+                <div class="mb-3">
+                    <span class="badge {% if p.prediction_status == 'Approved' %}bg-success-subtle text-success border border-success{% else %}bg-danger-subtle text-danger border border-danger{% endif %} px-3 py-2 fs-6 rounded-pill">
+                        Application Ref: {{ p.application_id }}
+                    </span>
+                </div>
+
+                {% if p.prediction_status == 'Approved' %}
+                    <div class="mx-auto mb-3 text-success d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; border-radius: 50%; background-color: #d1fae5;">
+                        <i class="fa-solid fa-circle-check fs-1"></i>
+                    </div>
+                    <h1 class="display-6 fw-extrabold text-success mb-2">Loan Approved</h1>
+                    <p class="text-secondary max-w-600 mx-auto mb-4">
+                        Based on historical underwriting patterns, this applicant demonstrates strong repayment indicators and meets standard risk thresholds.
+                    </p>
+                {% else %}
+                    <div class="mx-auto mb-3 text-danger d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; border-radius: 50%; background-color: #ffe4e6;">
+                        <i class="fa-solid fa-circle-xmark fs-1"></i>
+                    </div>
+                    <h1 class="display-6 fw-extrabold text-danger mb-2">Loan Rejected</h1>
+                    <p class="text-secondary max-w-600 mx-auto mb-4">
+                        The machine learning model determined this application carries an elevated risk profile, likely attributable to credit history guidelines or debt-to-income balance.
+                    </p>
+                {% endif %}
+
+                <!-- Confidence Gauge -->
+                <div class="p-3 bg-light rounded-3 max-w-500 mx-auto mb-4 text-start">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small fw-semibold text-secondary">Model Decision Confidence:</span>
+                        <strong class="fs-6 {% if p.prediction_status == 'Approved' %}text-success{% else %}text-danger{% endif %}">
+                            {{ p.confidence_score }}%
+                        </strong>
+                    </div>
+                    <div class="confidence-meter mb-2">
+                        <div class="{% if p.prediction_status == 'Approved' %}confidence-fill-approved{% else %}confidence-fill-rejected{% endif %}" style="width: {{ p.confidence_score }}%;"></div>
+                    </div>
+                    <div class="d-flex justify-content-between small text-secondary">
+                        <span>Evaluated by: <strong>{{ p.model_used }}</strong></span>
+                        <span>Timestamp: {{ p.created_at }}</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="{{ url_for('predict') }}" class="btn btn-primary-fintech px-4">
+                        <i class="fa-solid fa-calculator me-1"></i> Make Another Prediction
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary px-4">
+                        <i class="fa-solid fa-chart-line me-1"></i> Go to Dashboard
+                    </a>
+                    <button onclick="window.print()" class="btn btn-outline-dark px-3">
+                        <i class="fa-solid fa-print me-1"></i> Print / Save
+                    </button>
+                </div>
+            </div>
+
+            <!-- Financial Metrics Breakdown -->
+            <div class="card-modern p-4 mb-4">
+                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-receipt text-teal me-2"></i> Computed Underwriting Metrics</h5>
+                <div class="row g-3">
+                    <div class="col-md-3 col-6">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <span class="text-secondary small d-block mb-1">Total Household Income</span>
+                            <h5 class="fw-bold text-dark mb-0">${{ "{:,.0f}".format(financials.total_income) }}</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <span class="text-secondary small d-block mb-1">Requested Principal</span>
+                            <h5 class="fw-bold text-dark mb-0">${{ "{:,.0f}".format(financials.loan_principal) }}</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <span class="text-secondary small d-block mb-1">Estimated Monthly EMI</span>
+                            <h5 class="fw-bold text-teal mb-0">${{ "{:,.0f}".format(financials.monthly_emi) }} / mo</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-3 bg-light rounded-3 text-center">
+                            <span class="text-secondary small d-block mb-1">EMI to Income Ratio</span>
+                            <h5 class="fw-bold text-dark mb-0">{{ financials.emi_ratio }}%</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applicant Information Summary -->
+            <div class="card-modern p-4 mb-4">
+                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-user-check text-teal me-2"></i> Applicant Information Summary</h5>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Gender:</span>
+                                <strong class="text-dark">{{ p.gender }}</strong>
+                            </li>
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Marital Status:</span>
+                                <strong class="text-dark">{{ p.married }}</strong>
+                            </li>
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Dependents:</span>
+                                <strong class="text-dark">{{ p.dependents }}</strong>
+                            </li>
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Education:</span>
+                                <strong class="text-dark">{{ p.education }}</strong>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span class="text-secondary">Self Employed:</span>
+                                <strong class="text-dark">{{ p.self_employed }}</strong>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6">
+                        <ul class="list-unstyled d-flex flex-column gap-2 mb-0 small">
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Applicant Income:</span>
+                                <strong class="text-dark">${{ "{:,.0f}".format(p.applicant_income) }}</strong>
+                            </li>
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Co-applicant Income:</span>
+                                <strong class="text-dark">${{ "{:,.0f}".format(p.coapplicant_income) }}</strong>
+                            </li>
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Loan Duration:</span>
+                                <strong class="text-dark">{{ p.loan_amount_term|int }} Months</strong>
+                            </li>
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Property Location:</span>
+                                <strong class="text-dark">{{ p.property_area }}</strong>
+                            </li>
+                            <li class="d-flex justify-content-between">
+                                <span class="text-secondary">Credit History:</span>
+                                <strong class="{% if p.credit_history == 1.0 %}text-success{% else %}text-danger{% endif %}">
+                                    {{ financials.credit_status }}
+                                </strong>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Academic Disclaimer Notice -->
+            <div class="alert alert-secondary rounded-3 small text-secondary d-flex align-items-center gap-2">
+                <i class="fa-solid fa-circle-exclamation text-teal fs-5"></i>
+                <div>
+                    <strong>Academic Project Notice:</strong> This loan evaluation was generated by an educational machine learning model trained on historical data. It does not represent an actual financial institution's credit offer or commitment to lend.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

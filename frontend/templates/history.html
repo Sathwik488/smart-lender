@@ -1,0 +1,154 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Prediction Audit History - Smart Lender{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <span class="badge bg-teal-subtle text-teal px-3 py-2 fw-semibold rounded-pill mb-2">Audit Log</span>
+            <h2 class="fw-extrabold text-dark mb-0">Prediction History</h2>
+            <p class="text-secondary small mb-0">Search, filter, and inspect historical loan application assessments.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('predict') }}" class="btn btn-primary-fintech">
+                <i class="fa-solid fa-plus me-1"></i> New Application
+            </a>
+        </div>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="card-modern p-3 p-md-4 mb-4">
+        <form method="GET" action="{{ url_for('history') }}" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="search" class="form-label">Search Query</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" class="form-control" id="search" name="search" placeholder="Search by App ID or Property..." value="{{ search }}">
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+                <label for="status" class="form-label">Approval Status</label>
+                <select class="form-select" id="status" name="status">
+                    <option value="All" {% if status == 'All' %}selected{% endif %}>All Statuses</option>
+                    <option value="Approved" {% if status == 'Approved' %}selected{% endif %}>Approved Only</option>
+                    <option value="Rejected" {% if status == 'Rejected' %}selected{% endif %}>Rejected Only</option>
+                </select>
+            </div>
+
+            <div class="col-md-3 col-sm-6">
+                <label for="property_area" class="form-label">Property Location</label>
+                <select class="form-select" id="property_area" name="property_area">
+                    <option value="All" {% if property_area == 'All' %}selected{% endif %}>All Areas</option>
+                    <option value="Urban" {% if property_area == 'Urban' %}selected{% endif %}>Urban</option>
+                    <option value="Semiurban" {% if property_area == 'Semiurban' %}selected{% endif %}>Semiurban</option>
+                    <option value="Rural" {% if property_area == 'Rural' %}selected{% endif %}>Rural</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary-fintech w-100">
+                    <i class="fa-solid fa-filter me-1"></i> Filter
+                </button>
+                <a href="{{ url_for('history') }}" class="btn btn-outline-secondary" title="Clear Filters">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Data Table -->
+    <div class="card-modern p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-secondary small fw-semibold">
+                Showing <strong>{{ predictions|length }}</strong> record(s)
+            </span>
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-secondary small">Sort:</span>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        {% if sort_by == 'oldest' %}Oldest First{% elif sort_by == 'income_high' %}Highest Income{% elif sort_by == 'loan_high' %}Highest Loan{% else %}Newest First{% endif %}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end small">
+                        <li><a class="dropdown-item" href="{{ url_for('history', search=search, status=status, property_area=property_area, sort_by='newest') }}">Newest First</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('history', search=search, status=status, property_area=property_area, sort_by='oldest') }}">Oldest First</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('history', search=search, status=status, property_area=property_area, sort_by='income_high') }}">Highest Income</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('history', search=search, status=status, property_area=property_area, sort_by='loan_high') }}">Highest Loan</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="historyTable">
+                <thead class="table-light small">
+                    <tr>
+                        <th>Application ID</th>
+                        <th>Applicant</th>
+                        <th>Household Income</th>
+                        <th>Loan Amount</th>
+                        <th>Term</th>
+                        <th>Credit</th>
+                        <th>Area</th>
+                        <th>Status</th>
+                        <th>Confidence</th>
+                        <th>Model</th>
+                        <th>Date</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody class="small">
+                    {% for p in predictions %}
+                    <tr>
+                        <td class="fw-bold text-dark">{{ p.application_id }}</td>
+                        <td>
+                            <div>{{ p.gender }}, {{ p.married == 'Yes' and 'Married' or 'Single' }}</div>
+                            <span class="text-secondary" style="font-size: 0.75rem;">Dep: {{ p.dependents }} | {{ p.education }}</span>
+                        </td>
+                        <td>
+                            <div>${{ "{:,.0f}".format(p.applicant_income) }}</div>
+                            {% if p.coapplicant_income > 0 %}
+                            <span class="text-secondary" style="font-size: 0.75rem;">+${{ "{:,.0f}".format(p.coapplicant_income) }} co-app</span>
+                            {% endif %}
+                        </td>
+                        <td class="fw-semibold text-dark">${{ "{:,.0f}".format(p.loan_amount) }}k</td>
+                        <td>{{ p.loan_amount_term|int }}m</td>
+                        <td>
+                            {% if p.credit_history == 1.0 %}
+                            <span class="badge bg-success-subtle text-success">Good (1.0)</span>
+                            {% else %}
+                            <span class="badge bg-danger-subtle text-danger">Poor (0.0)</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ p.property_area }}</td>
+                        <td>
+                            {% if p.prediction_status == 'Approved' %}
+                            <span class="badge-approved"><i class="fa-solid fa-check me-1"></i> Approved</span>
+                            {% else %}
+                            <span class="badge-rejected"><i class="fa-solid fa-xmark me-1"></i> Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td class="fw-semibold">{{ p.confidence_score }}%</td>
+                        <td><span class="badge bg-light text-dark border">{{ p.model_used }}</span></td>
+                        <td class="text-secondary" style="font-size: 0.75rem;">{{ p.created_at[:16] }}</td>
+                        <td>
+                            <a href="{{ url_for('prediction_result', application_id=p.application_id) }}" class="btn btn-sm btn-outline-fintech py-1 px-2" title="View Full Report">
+                                <i class="fa-solid fa-file-invoice"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="12" class="text-center text-secondary py-4">
+                            <i class="fa-solid fa-inbox fs-2 text-secondary opacity-50 mb-2 d-block"></i>
+                            No loan applications matched your filter criteria.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

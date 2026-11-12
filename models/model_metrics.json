@@ -1,0 +1,112 @@
+{
+    "best_model": "Random Forest",
+    "algorithms": {
+        "Decision Tree": {
+            "accuracy": 0.748,
+            "precision": 0.7935,
+            "recall": 0.8588,
+            "f1_score": 0.8249,
+            "roc_auc": 0.6814,
+            "confusion_matrix": [
+                [
+                    19,
+                    19
+                ],
+                [
+                    12,
+                    73
+                ]
+            ]
+        },
+        "Random Forest": {
+            "accuracy": 0.7967,
+            "precision": 0.8333,
+            "recall": 0.8824,
+            "f1_score": 0.8571,
+            "roc_auc": 0.8198,
+            "confusion_matrix": [
+                [
+                    23,
+                    15
+                ],
+                [
+                    10,
+                    75
+                ]
+            ]
+        },
+        "KNN": {
+            "accuracy": 0.7561,
+            "precision": 0.8235,
+            "recall": 0.8235,
+            "f1_score": 0.8235,
+            "roc_auc": 0.8266,
+            "confusion_matrix": [
+                [
+                    23,
+                    15
+                ],
+                [
+                    15,
+                    70
+                ]
+            ]
+        },
+        "Gradient Boosting": {
+            "accuracy": 0.7642,
+            "precision": 0.8111,
+            "recall": 0.8588,
+            "f1_score": 0.8343,
+            "roc_auc": 0.7766,
+            "confusion_matrix": [
+                [
+                    21,
+                    17
+                ],
+                [
+                    12,
+                    73
+                ]
+            ]
+        }
+    },
+    "categorical_features": [
+        "Gender",
+        "Married",
+        "Dependents",
+        "Education",
+        "Self_Employed",
+        "Property_Area"
+    ],
+    "numerical_features": [
+        "ApplicantIncome",
+        "CoapplicantIncome",
+        "LoanAmount",
+        "Loan_Amount_Term",
+        "Credit_History"
+    ],
+    "encoded_feature_names": [
+        "Gender_Female",
+        "Gender_Male",
+        "Married_No",
+        "Married_Yes",
+        "Dependents_0",
+        "Dependents_1",
+        "Dependents_2",
+        "Dependents_3",
+        "Education_Graduate",
+        "Education_Not Graduate",
+        "Self_Employed_No",
+        "Self_Employed_Yes",
+        "Property_Area_Rural",
+        "Property_Area_Semiurban",
+        "Property_Area_Urban",
+        "ApplicantIncome",
+        "CoapplicantIncome",
+        "LoanAmount",
+        "Loan_Amount_Term",
+        "Credit_History"
+    ],
+    "test_set_size": 123,
+    "train_set_size": 491
+}

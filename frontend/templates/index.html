@@ -1,0 +1,223 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Smart Lender - Intelligent Loan Approval Prediction System{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <span class="hero-badge">
+                    <i class="fa-solid fa-microchip me-1"></i> AI-Powered FinTech Underwriting Engine
+                </span>
+                <h1 class="display-5 fw-extrabold text-white mb-3" style="letter-spacing: -1px; font-weight: 800;">
+                    Smart Lender: Intelligent Loan Approval Prediction
+                </h1>
+                <p class="lead text-light opacity-90 mb-4" style="font-size: 1.15rem; line-height: 1.6;">
+                    Leverage advanced machine learning algorithms trained on historical banking data to evaluate applicant creditworthiness, predict loan approval odds, and mitigate default risk in real time.
+                </p>
+                <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
+                    <a href="{{ url_for('predict') }}" class="btn btn-primary-fintech btn-lg px-4 shadow">
+                        <i class="fa-solid fa-calculator me-2"></i> Predict Your Loan Eligibility
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fa-solid fa-chart-pie me-2"></i> View Analytics Dashboard
+                    </a>
+                </div>
+                <div class="row g-3 pt-3 border-top border-secondary border-opacity-25 text-light">
+                    <div class="col-auto d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-check-circle text-teal"></i>
+                        <span class="small">SMOTE Class Balanced</span>
+                    </div>
+                    <div class="col-auto d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-check-circle text-teal"></i>
+                        <span class="small">4 Trained ML Models</span>
+                    </div>
+                    <div class="col-auto d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-check-circle text-teal"></i>
+                        <span class="small">Zero Data Leakage Pipeline</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card-modern p-4 text-dark shadow-lg bg-white rounded-4 border-0">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0 text-slate">Live System Overview</h6>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                            <i class="fa-solid fa-circle-dot me-1"></i> Operational
+                        </span>
+                    </div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="text-secondary small fw-semibold">Total Evaluated</div>
+                                <div class="fs-4 fw-bold text-dark">{{ stats.total_predictions }}</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded-3">
+                                <div class="text-secondary small fw-semibold">Approval Rate</div>
+                                <div class="fs-4 fw-bold text-teal">{{ stats.approval_rate }}%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-3 mb-3" style="background-color: #f1f5f9;">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="small fw-bold text-dark">Primary Model:</span>
+                            <span class="badge bg-teal text-white">{{ metadata.best_model }}</span>
+                        </div>
+                        <div class="small text-secondary">
+                            Trained with 150 estimators, balanced with SMOTE oversampling to prevent bias against rejected applications.
+                        </div>
+                    </div>
+                    <a href="{{ url_for('predict') }}" class="btn btn-primary-fintech w-100 py-2">
+                        Start Instant Evaluation <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="badge bg-teal-subtle text-teal px-3 py-2 fw-semibold rounded-pill mb-2">Workflow</span>
+            <h2 class="fw-bold text-dark">How Smart Lender Works</h2>
+            <p class="text-secondary">A transparent 4-stage predictive workflow designed to automate loan underwriting.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card-modern feature-card text-center">
+                    <div class="feature-icon mx-auto bg-teal-subtle text-teal">
+                        <i class="fa-solid fa-user-pen"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">1. Applicant Profile</h5>
+                    <p class="text-secondary small mb-0">
+                        Collects demographic details, income figures, employment status, credit history, and loan requirements.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card-modern feature-card text-center">
+                    <div class="feature-icon mx-auto bg-primary-subtle text-primary">
+                        <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">2. Data Preprocessing</h5>
+                    <p class="text-secondary small mb-0">
+                        Applies mode/median imputations, one-hot categorical encoding, and numerical standard scaling.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card-modern feature-card text-center">
+                    <div class="feature-icon mx-auto bg-warning-subtle text-warning">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">3. ML Inference</h5>
+                    <p class="text-secondary small mb-0">
+                        Executes trained ensemble trees (Random Forest, Gradient Boosting) to compute approval probability.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card-modern feature-card text-center">
+                    <div class="feature-icon mx-auto bg-success-subtle text-success">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">4. Decision & Insights</h5>
+                    <p class="text-secondary small mb-0">
+                        Delivers immediate decision, confidence score, EMI ratio, risk categorization, and persistent storage.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Machine Learning Models Comparison Section -->
+<section class="py-5" style="background-color: #f8fafc;">
+    <div class="container py-4">
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6">
+                <span class="badge bg-teal-subtle text-teal px-3 py-2 fw-semibold rounded-pill mb-2">Model Benchmarks</span>
+                <h2 class="fw-bold text-dark">Machine Learning Algorithms Used</h2>
+                <p class="text-secondary mb-0">
+                    We trained, cross-validated, and benchmarked 4 prominent classification algorithms on the loan dataset with synthetic minority oversampling (SMOTE).
+                </p>
+            </div>
+            <div class="col-lg-6 text-lg-end mt-3 mt-lg-0">
+                <a href="{{ url_for('about') }}" class="btn btn-outline-fintech">
+                    Explore Technical Details <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            {% if metadata.algorithms %}
+                {% for name, metrics in metadata.algorithms.items() %}
+                <div class="col-md-6 col-lg-3">
+                    <div class="card-modern p-4 h-100 position-relative {% if name == metadata.best_model %}border-teal border-2 shadow{% endif %}">
+                        {% if name == metadata.best_model %}
+                        <span class="position-absolute top-0 start-50 translate-middle badge bg-teal text-white px-3 py-1 shadow-sm">
+                            <i class="fa-solid fa-award me-1"></i> Best Model
+                        </span>
+                        {% endif %}
+                        <h5 class="fw-bold text-dark mt-2 mb-3">{{ name }}</h5>
+                        <ul class="list-unstyled small d-flex flex-column gap-2 mb-4">
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Accuracy:</span>
+                                <span class="fw-bold text-dark">{{ (metrics.accuracy * 100)|round(1) }}%</span>
+                            </li>
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Precision:</span>
+                                <span class="fw-bold text-dark">{{ (metrics.precision * 100)|round(1) }}%</span>
+                            </li>
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">Recall:</span>
+                                <span class="fw-bold text-dark">{{ (metrics.recall * 100)|round(1) }}%</span>
+                            </li>
+                            <li class="d-flex justify-content-between pb-1 border-bottom">
+                                <span class="text-secondary">F1-Score:</span>
+                                <span class="fw-bold text-teal">{{ (metrics.f1_score * 100)|round(1) }}%</span>
+                            </li>
+                            {% if metrics.roc_auc %}
+                            <li class="d-flex justify-content-between">
+                                <span class="text-secondary">ROC-AUC:</span>
+                                <span class="fw-bold text-dark">{{ metrics.roc_auc }}</span>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        <div class="mt-auto">
+                            <a href="{{ url_for('predict') }}" class="btn btn-sm btn-outline-secondary w-100">
+                                Test this model
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="py-5" style="background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%);">
+    <div class="container py-4 text-center text-white">
+        <h2 class="display-6 fw-bold mb-3">Ready to evaluate a loan applicant?</h2>
+        <p class="lead text-light opacity-90 max-w-700 mx-auto mb-4" style="font-size: 1.1rem;">
+            Test the live prediction pipeline, examine risk factors, and store results directly in the database.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('predict') }}" class="btn btn-primary-fintech btn-lg px-4 shadow">
+                <i class="fa-solid fa-calculator me-2"></i> Start Application Now
+            </a>
+            <a href="{{ url_for('history') }}" class="btn btn-outline-light btn-lg px-4">
+                <i class="fa-solid fa-table me-2"></i> Browse History
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
